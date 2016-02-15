@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/shibata/proj/ghost/calibrator/calibrator.xcodeproj">
+      location = "self:/Users/shibata/proj/of/addons/ofxCalibrator/examples/setup/setup.xcodeproj">
    </FileRef>
 </Workspace>
