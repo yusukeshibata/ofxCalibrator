@@ -13,14 +13,14 @@ void ofxCalibrator::draw(ofFbo *fbo) {
             face->fbo.begin();
             ofPushStyle();
             ofSetHexColor(0x000000);
-            ofRect(0,0,face->fbo.getWidth(),face->fbo.getHeight());
+            ofDrawRectangle(0,0,face->fbo.getWidth(),face->fbo.getHeight());
             ofPopStyle();
             fbo->draw(-face->offsetx,-face->offsety);
             face->fbo.end();
             
             glActiveTexture(GL_TEXTURE0_ARB);
-            fbo_bg.getTextureReference().bind();
-            
+            fbo_bg.getTexture().bind();
+
             //draw a quad the size of the frame
             glBegin(GL_QUADS);
             glMultiTexCoord2d(GL_TEXTURE0_ARB, 0, 0);
@@ -34,11 +34,11 @@ void ofxCalibrator::draw(ofFbo *fbo) {
             glEnd();
             
             glActiveTexture(GL_TEXTURE0_ARB);
-            fbo_bg.getTextureReference().unbind();
+            fbo_bg.getTexture().unbind();
             
             
             glActiveTexture(GL_TEXTURE1_ARB);
-            face->fbo.getTextureReference().bind();
+            face->fbo.getTexture().bind();
             
             //draw a quad the size of the frame
             glBegin(GL_QUADS);
@@ -54,7 +54,7 @@ void ofxCalibrator::draw(ofFbo *fbo) {
             
             //deactive and clean up
             glActiveTexture(GL_TEXTURE1_ARB);
-            face->fbo.getTextureReference().unbind();
+            face->fbo.getTexture().unbind();
         }
     }
 }
@@ -112,15 +112,15 @@ void ofxCalibrator::update() {
         if(size == 0) continue;
         for(j=0; j<size; j++) {
             face_t *f = screen->faces[j];
-            ofLine(f->lt->x,f->lt->y,f->rt->x,f->rt->y);
-            ofLine(f->rt->x,f->rt->y,f->rb->x,f->rb->y);
-            ofLine(f->rb->x,f->rb->y,f->lb->x,f->lb->y);
-            ofLine(f->lb->x,f->lb->y,f->lt->x,f->lt->y);
+            ofDrawLine(f->lt->x,f->lt->y,f->rt->x,f->rt->y);
+            ofDrawLine(f->rt->x,f->rt->y,f->rb->x,f->rb->y);
+            ofDrawLine(f->rb->x,f->rb->y,f->lb->x,f->lb->y);
+            ofDrawLine(f->lb->x,f->lb->y,f->lt->x,f->lt->y);
             if(screen == current_screen ) {
-                ofRect(f->lt->x-PLOTSIZE/2,f->lt->y-PLOTSIZE/2,PLOTSIZE,PLOTSIZE);
-                ofRect(f->rt->x-PLOTSIZE/2,f->rt->y-PLOTSIZE/2,PLOTSIZE,PLOTSIZE);
-                ofRect(f->rb->x-PLOTSIZE/2,f->rb->y-PLOTSIZE/2,PLOTSIZE,PLOTSIZE);
-                ofRect(f->lb->x-PLOTSIZE/2,f->lb->y-PLOTSIZE/2,PLOTSIZE,PLOTSIZE);
+                ofDrawRectangle(f->lt->x-PLOTSIZE/2,f->lt->y-PLOTSIZE/2,PLOTSIZE,PLOTSIZE);
+                ofDrawRectangle(f->rt->x-PLOTSIZE/2,f->rt->y-PLOTSIZE/2,PLOTSIZE,PLOTSIZE);
+                ofDrawRectangle(f->rb->x-PLOTSIZE/2,f->rb->y-PLOTSIZE/2,PLOTSIZE,PLOTSIZE);
+                ofDrawRectangle(f->lb->x-PLOTSIZE/2,f->lb->y-PLOTSIZE/2,PLOTSIZE,PLOTSIZE);
             }
         }
     }
@@ -143,7 +143,7 @@ void ofxCalibrator::prepare() {
     fbo_bg.allocate(64,64);
     fbo_bg.begin();
     ofSetHexColor(0xffffff);
-    ofRect(0,0,fbo_bg.getWidth(),fbo_bg.getHeight());
+    ofDrawRectangle(0,0,fbo_bg.getWidth(),fbo_bg.getHeight());
     fbo_bg.end();
 }
 ofxCalibrator::ofxCalibrator() {
