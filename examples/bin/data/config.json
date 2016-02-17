@@ -1,6 +1,8 @@
 {
 	"width":640,
 	"height":480,
-	"screencol":2,
-	"screenrow":1
+	"screencol":1,
+	"screenrow":1,
+	"divx":8,
+	"divy":8
 }

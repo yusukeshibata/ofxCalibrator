@@ -34,6 +34,7 @@ typedef struct _screen_t {
 class ofxCalibrator {
 	
 	point_t *p_dragging;
+	vector<screen_t *> screensSplitted;
 	vector<screen_t *> screens;
 	vector<point_t *> points;
 	point_t *newpoint(int x, int y);
@@ -44,6 +45,7 @@ class ofxCalibrator {
 	
 	screen_t *current_screen;
 	int width, height;
+	int divx, divy;
 	int screenrow,screencol;
 public:
 	void load();
@@ -59,6 +61,8 @@ public:
 	ofFbo *getFbo();
 	void mousePressed(int x, int y);
 	void mouseDragged(int x, int y);
+protected:
+	void split();
 };
 
 
