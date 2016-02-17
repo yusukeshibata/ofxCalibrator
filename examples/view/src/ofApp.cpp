@@ -1,18 +1,24 @@
 #include "ofApp.h"
+#include "ofxJSONElement.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	ofxJSONElement setting;
+	setting.open("config.json");
+	ofSetFullscreen(TRUE);
 	ofDisableArbTex();
 	calib.load();
-	fbo.allocate(640,480);
+	width = setting["width"].asInt();
+	height = setting["height"].asInt();
+	fbo.allocate(width,height);
 	fbo.begin();
 	ofClear(0x000000);
 	ofSetLineWidth(2);
 	ofSetHexColor(0xffffff);
-	for(float y=0;y<480;y+=20) {
-		ofDrawLine(0,y,640,y);
-		for(float x=0;x<640;x+=20) {
-			ofDrawLine(x,0,x,480);
+	for(float y=0;y<height;y+=20) {
+		ofDrawLine(0,y,width,y);
+		for(float x=0;x<width;x+=20) {
+			ofDrawLine(x,0,x,height);
 		}
 	}
 	fbo.end();

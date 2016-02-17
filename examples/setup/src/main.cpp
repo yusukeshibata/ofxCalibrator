@@ -4,7 +4,8 @@
 
 //========================================================================
 int main( ){
-    ofAppGLFWWindow win;
-    ofSetupOpenGL(&win, 640,480, OF_WINDOW);
-    ofRunApp( new ofApp());
+	ofAppGLFWWindow win;
+	win.setMultiDisplayFullscreen(TRUE);
+	ofSetupOpenGL(&win, 640,480, OF_WINDOW);
+	ofRunApp( new ofApp());
 }

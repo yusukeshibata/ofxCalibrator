@@ -20,5 +20,6 @@ public:
 	void gotMessage(ofMessage msg);
 	
 	ofxCalibrator calib;
+	int width,height;
 	ofFbo fbo;
 };
