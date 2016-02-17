@@ -256,10 +256,10 @@ void ofxCalibrator::load() {
 					int pt3 = x + (y+1)*gridSizeX;
 
 					face_t *sFace = new face_t();
-					sFace->offsetx = face->offsetx;
-					sFace->offsety = face->offsety;
-					sFace->ow = face->ow/gridSizeX;
-					sFace->oh = face->oh/gridSizeY;
+					sFace->offsetx = face->offsetx+face->ow*x/(gridSizeX-1);
+					sFace->offsety = face->offsety+face->oh*y/(gridSizeY-1);
+					sFace->ow = face->ow/(gridSizeX-1);
+					sFace->oh = face->oh/(gridSizeY-1);
 					sFace->vertices[0].x = grid[pt0].x;
 					sFace->vertices[0].y = grid[pt0].y;
 					sFace->vertices[1].x = grid[pt1].x;

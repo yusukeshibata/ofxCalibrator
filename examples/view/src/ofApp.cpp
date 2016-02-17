@@ -10,17 +10,21 @@ void ofApp::setup(){
 	calib.load();
 	width = setting["width"].asInt();
 	height = setting["height"].asInt();
+
+	ofImage image;
+	image.load("test.jpg");
 	fbo.allocate(width,height);
 	fbo.begin();
 	ofClear(0x000000);
-	ofSetLineWidth(2);
-	ofSetHexColor(0xffffff);
-	for(float y=0;y<height;y+=20) {
-		ofDrawLine(0,y,width,y);
-		for(float x=0;x<width;x+=20) {
-			ofDrawLine(x,0,x,height);
-		}
-	}
+	//ofSetLineWidth(2);
+	//ofSetHexColor(0xff0000);
+	//for(float y=0;y<height;y+=20) {
+	//	ofDrawLine(0,y,width,y);
+	//	for(float x=0;x<width;x+=20) {
+	//		ofDrawLine(x,0,x,height);
+	//	}
+	//}
+	image.draw(0,0,width,height);
 	fbo.end();
 }
 
