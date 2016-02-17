@@ -2,11 +2,13 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	ofDisableArbTex();
 	calib.load();
 	fbo.allocate(640,480);
 	fbo.begin();
-	ofClear(0xffffff);
-	ofSetHexColor(0x000000);
+	ofClear(0x000000);
+	ofSetLineWidth(2);
+	ofSetHexColor(0xffffff);
 	for(float y=0;y<480;y+=20) {
 		ofDrawLine(0,y,640,y);
 		for(float x=0;x<640;x+=20) {
@@ -18,15 +20,13 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	ofBackgroundHex(0xffffff);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofPushMatrix();
+	ofClear(0x000000);
 	ofSetHexColor(0xffffff);
 	calib.draw(&fbo);
-	ofPopMatrix();
 }
 
 //--------------------------------------------------------------
@@ -35,7 +35,6 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-	
 }
 
 //--------------------------------------------------------------
