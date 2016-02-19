@@ -50,7 +50,7 @@ class ofxCalibrator {
 public:
 	void load(string filename);
 	ofxCalibrator();
-	void draw(ofFbo *fbo);
+	void draw(ofFbo *fbo, ofFbo *fbo_to_draw = NULL);
 	void setCurrentScreen(int index);
 	void push_col();
 	void pop_col();

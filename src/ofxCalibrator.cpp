@@ -3,9 +3,11 @@
 
 #define PLOTSIZE 40
 
-void ofxCalibrator::draw(ofFbo *fbo) {
+void ofxCalibrator::draw(ofFbo *fbo,ofFbo *fbo_to_draw) {
 	int i,j;
-	
+	if(fbo_to_draw) {
+		fbo_to_draw->begin();
+	}
 	for(i=0;i<screensSplitted.size();i++) {
 		screen_t *screen = screensSplitted[i];
 		for(j=0;j<screen->faces.size();j++) {
@@ -22,6 +24,9 @@ void ofxCalibrator::draw(ofFbo *fbo) {
 			face->vbo.draw(GL_QUADS,0,4);
 			face->fbo.getTexture().unbind();
 		}
+	}
+	if(fbo_to_draw) {
+		fbo_to_draw->end();
 	}
 }
 
