@@ -48,7 +48,7 @@ class ofxCalibrator {
 	int divx, divy;
 	int screenrow,screencol;
 public:
-	void load();
+	void load(string filename);
 	ofxCalibrator();
 	void draw(ofFbo *fbo);
 	void setCurrentScreen(int index);
@@ -64,6 +64,7 @@ public:
 protected:
 	bool reverse;
 	void split();
+	string filename;
 };
 
 

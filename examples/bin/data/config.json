@@ -1,8 +1,9 @@
 {
 	"width":1440,
 	"height":900,
-	"screencol":1,
+	"screencol":2,
 	"screenrow":1,
 	"divx":2,
-	"divy":2
+	"divy":2,
+	"reverse":true
 }

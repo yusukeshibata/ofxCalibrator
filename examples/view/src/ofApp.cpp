@@ -7,7 +7,7 @@ void ofApp::setup(){
 	setting.open("config.json");
 	ofSetFullscreen(TRUE);
 	ofDisableArbTex();
-	calib.load();
+	calib.load("config");
 	width = setting["width"].asInt();
 	height = setting["height"].asInt();
 

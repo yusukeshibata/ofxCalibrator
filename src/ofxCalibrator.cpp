@@ -116,10 +116,13 @@ void ofxCalibrator::prepare() {
 ofxCalibrator::ofxCalibrator() {
 	reverse = FALSE;
 }
-void ofxCalibrator::load() {
+void ofxCalibrator::load(string _filename) {
+	filename = _filename;
+	char filename_config[1024];
+	sprintf(filename_config,"%s.json",filename.c_str());
 	int i,j;
 	ofxJSONElement json;
-	if(json.open("config.json")) {
+	if(json.open(filename_config)) {
 		reverse = json["reverse"].asBool();
 		width = json["width"].asInt();
 		height = json["height"].asInt();
@@ -147,7 +150,9 @@ void ofxCalibrator::load() {
 	}
 	char key[1024];
 	ofxJSONElement settings;
-	if(settings.open("calibration.json")) {
+	char filename_calibration[1024];
+	sprintf(filename_calibration,"%s.calibration.json",filename.c_str());
+	if(settings.open(filename_calibration)) {
 		for(i=0;i<screens.size();i++) {
 			current_screen = screens[i];
 			sprintf(key,".screen%d.colnum",current_screen->index);
@@ -280,22 +285,22 @@ void ofxCalibrator::load() {
 						sFace->texcoords[3].x = 0;
 						sFace->texcoords[3].y = 1;
 					} else {
-						sFace->texcoords[0].x = grid[pt0].x/(width/(gridSizeX-1));
-						sFace->texcoords[0].y = grid[pt0].y/(height/(gridSizeY-1));
-						sFace->texcoords[1].x = grid[pt1].x/(width/(gridSizeX-1));
-						sFace->texcoords[1].y = grid[pt1].y/(height/(gridSizeY-1));
-						sFace->texcoords[2].x = grid[pt2].x/(width/(gridSizeX-1));
-						sFace->texcoords[2].y = grid[pt2].y/(height/(gridSizeY-1));
-						sFace->texcoords[3].x = grid[pt3].x/(width/(gridSizeX-1));
-						sFace->texcoords[3].y = grid[pt3].y/(height/(gridSizeY-1));
-						sFace->vertices[0].x = (x)*width/(gridSizeX-1);
-						sFace->vertices[0].y = (y)*height/(gridSizeY-1);;
-						sFace->vertices[1].x = (x+1)*width/(gridSizeX-1);
-						sFace->vertices[1].y = (y)*height/(gridSizeY-1);
-						sFace->vertices[2].x = (x+1)*width/(gridSizeX-1);
-						sFace->vertices[2].y = (y+1)*height/(gridSizeY-1);
-						sFace->vertices[3].x = (x)*width/(gridSizeX-1);
-						sFace->vertices[3].y = (y+1)*height/(gridSizeY-1);
+						sFace->vertices[0].x =quad[0].x;
+						sFace->vertices[0].y =quad[0].y;
+						sFace->vertices[1].x =quad[1].x;
+						sFace->vertices[1].y =quad[1].y;
+						sFace->vertices[2].x =quad[2].x;
+						sFace->vertices[2].y =quad[2].y;
+						sFace->vertices[3].x =quad[3].x;
+						sFace->vertices[3].y =quad[3].y;
+						sFace->texcoords[0].x = grid[pt0].x/width;
+						sFace->texcoords[0].y = grid[pt0].y/height;
+						sFace->texcoords[1].x = grid[pt1].x/width;
+						sFace->texcoords[1].y = grid[pt1].y/height;
+						sFace->texcoords[2].x = grid[pt2].x/width;
+						sFace->texcoords[2].y = grid[pt2].y/height;
+						sFace->texcoords[3].x = grid[pt3].x/width;
+						sFace->texcoords[3].y = grid[pt3].y/height;
 					}
 					sFace->vbo.setVertexData(sFace->vertices,4, GL_STATIC_DRAW);
 					sFace->vbo.setTexCoordData(sFace->texcoords,4, GL_STATIC_DRAW);
@@ -365,7 +370,9 @@ void ofxCalibrator::save() {
 			settings[key] =  f->lb->index;
 		}
 	}
-	settings.save("calibration.json");
+	char filename_calibration[1024];
+	sprintf(filename_calibration,"%s.calibration.json",filename.c_str());
+	settings.save(filename_calibration);
 }
 point_t *ofxCalibrator::newpoint(int x, int y) {
 	point_t *p = new point_t;
