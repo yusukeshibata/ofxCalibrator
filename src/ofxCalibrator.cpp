@@ -114,11 +114,13 @@ void ofxCalibrator::prepare() {
 	fbo_bg.end();
 }
 ofxCalibrator::ofxCalibrator() {
+	reverse = FALSE;
 }
 void ofxCalibrator::load() {
 	int i,j;
 	ofxJSONElement json;
 	if(json.open("config.json")) {
+		reverse = json["reverse"].asBool();
 		width = json["width"].asInt();
 		height = json["height"].asInt();
 		screenrow = json["screenrow"].asInt();
@@ -260,22 +262,41 @@ void ofxCalibrator::load() {
 					sFace->offsety = face->offsety+face->oh*y/(gridSizeY-1);
 					sFace->ow = face->ow/(gridSizeX-1);
 					sFace->oh = face->oh/(gridSizeY-1);
-					sFace->texcoords[0].x = grid[pt0].x/(width/(gridSizeX-1));
-					sFace->texcoords[0].y = grid[pt0].y/(height/(gridSizeY-1));
-					sFace->texcoords[1].x = grid[pt1].x/(width/(gridSizeX-1));
-					sFace->texcoords[1].y = grid[pt1].y/(height/(gridSizeY-1));
-					sFace->texcoords[2].x = grid[pt2].x/(width/(gridSizeX-1));
-					sFace->texcoords[2].y = grid[pt2].y/(height/(gridSizeY-1));
-					sFace->texcoords[3].x = grid[pt3].x/(width/(gridSizeX-1));
-					sFace->texcoords[3].y = grid[pt3].y/(height/(gridSizeY-1));
-					sFace->vertices[0].x = (x)*width/(gridSizeX-1);
-					sFace->vertices[0].y = (y)*height/(gridSizeY-1);;
-					sFace->vertices[1].x = (x+1)*width/(gridSizeX-1);
-					sFace->vertices[1].y = (y)*height/(gridSizeY-1);
-					sFace->vertices[2].x = (x+1)*width/(gridSizeX-1);
-					sFace->vertices[2].y = (y+1)*height/(gridSizeY-1);
-					sFace->vertices[3].x = (x)*width/(gridSizeX-1);
-					sFace->vertices[3].y = (y+1)*height/(gridSizeY-1);
+					if(reverse == FALSE) {
+						sFace->vertices[0].x = grid[pt0].x;
+						sFace->vertices[0].y = grid[pt0].y;
+						sFace->vertices[1].x = grid[pt1].x;
+						sFace->vertices[1].y = grid[pt1].y;
+						sFace->vertices[2].x = grid[pt2].x;
+						sFace->vertices[2].y = grid[pt2].y;
+						sFace->vertices[3].x = grid[pt3].x;
+						sFace->vertices[3].y = grid[pt3].y;
+						sFace->texcoords[0].x = 0;
+						sFace->texcoords[0].y = 0;
+						sFace->texcoords[1].x = 1;
+						sFace->texcoords[1].y = 0;
+						sFace->texcoords[2].x = 1;
+						sFace->texcoords[2].y = 1;
+						sFace->texcoords[3].x = 0;
+						sFace->texcoords[3].y = 1;
+					} else {
+						sFace->texcoords[0].x = grid[pt0].x/(width/(gridSizeX-1));
+						sFace->texcoords[0].y = grid[pt0].y/(height/(gridSizeY-1));
+						sFace->texcoords[1].x = grid[pt1].x/(width/(gridSizeX-1));
+						sFace->texcoords[1].y = grid[pt1].y/(height/(gridSizeY-1));
+						sFace->texcoords[2].x = grid[pt2].x/(width/(gridSizeX-1));
+						sFace->texcoords[2].y = grid[pt2].y/(height/(gridSizeY-1));
+						sFace->texcoords[3].x = grid[pt3].x/(width/(gridSizeX-1));
+						sFace->texcoords[3].y = grid[pt3].y/(height/(gridSizeY-1));
+						sFace->vertices[0].x = (x)*width/(gridSizeX-1);
+						sFace->vertices[0].y = (y)*height/(gridSizeY-1);;
+						sFace->vertices[1].x = (x+1)*width/(gridSizeX-1);
+						sFace->vertices[1].y = (y)*height/(gridSizeY-1);
+						sFace->vertices[2].x = (x+1)*width/(gridSizeX-1);
+						sFace->vertices[2].y = (y+1)*height/(gridSizeY-1);
+						sFace->vertices[3].x = (x)*width/(gridSizeX-1);
+						sFace->vertices[3].y = (y+1)*height/(gridSizeY-1);
+					}
 					sFace->vbo.setVertexData(sFace->vertices,4, GL_STATIC_DRAW);
 					sFace->vbo.setTexCoordData(sFace->texcoords,4, GL_STATIC_DRAW);
 					sFace->row = y;

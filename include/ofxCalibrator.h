@@ -62,6 +62,7 @@ public:
 	void mousePressed(int x, int y);
 	void mouseDragged(int x, int y);
 protected:
+	bool reverse;
 	void split();
 };
 
