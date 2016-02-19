@@ -298,14 +298,14 @@ void ofxCalibrator::load(string _filename) {
 						sFace->vertices[2].y =quad[2].y;
 						sFace->vertices[3].x =quad[3].x;
 						sFace->vertices[3].y =quad[3].y;
-						sFace->texcoords[0].x = grid[pt0].x/width;
-						sFace->texcoords[0].y = grid[pt0].y/height;
-						sFace->texcoords[1].x = grid[pt1].x/width;
-						sFace->texcoords[1].y = grid[pt1].y/height;
-						sFace->texcoords[2].x = grid[pt2].x/width;
-						sFace->texcoords[2].y = grid[pt2].y/height;
-						sFace->texcoords[3].x = grid[pt3].x/width;
-						sFace->texcoords[3].y = grid[pt3].y/height;
+						sFace->texcoords[0].x = (grid[pt0].x/(float)width*screencol-screen->col);
+						sFace->texcoords[0].y = (grid[pt0].y/(float)height*screenrow-screen->row);
+						sFace->texcoords[1].x = (grid[pt1].x/(float)width*screencol-screen->col);
+						sFace->texcoords[1].y = (grid[pt1].y/(float)height*screenrow-screen->row);
+						sFace->texcoords[2].x = (grid[pt2].x/(float)width*screencol-screen->col);
+						sFace->texcoords[2].y = (grid[pt2].y/(float)height*screenrow-screen->row);
+						sFace->texcoords[3].x = (grid[pt3].x/(float)width*screencol-screen->col);
+						sFace->texcoords[3].y = (grid[pt3].y/(float)height*screenrow-screen->row);
 					}
 					sFace->vbo.setVertexData(sFace->vertices,4, GL_STATIC_DRAW);
 					sFace->vbo.setTexCoordData(sFace->texcoords,4, GL_STATIC_DRAW);
