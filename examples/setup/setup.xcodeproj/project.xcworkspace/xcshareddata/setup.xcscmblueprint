@@ -5,11 +5,13 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "5DB7C332A3A89035E93556A2A38BF414005BA671" : 0,
+    "DCD30AF17D9B7F212958E50D8629A694E55D1AAD" : 0,
     "C25A793D17C7819F593CD7F3F58D47751E130921" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "CE00B3FE-5A6F-4449-8F2F-3670404242BE",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "5DB7C332A3A89035E93556A2A38BF414005BA671" : "ofxJSON\/",
+    "DCD30AF17D9B7F212958E50D8629A694E55D1AAD" : "..\/..",
     "C25A793D17C7819F593CD7F3F58D47751E130921" : "ofxCalibrator\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "setup",
@@ -25,6 +27,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:yusukeshibata\/ofxCalibrator.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C25A793D17C7819F593CD7F3F58D47751E130921"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "bitbucket.org:semitransparentdesign\/nike3d.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DCD30AF17D9B7F212958E50D8629A694E55D1AAD"
     }
   ]
 }

@@ -44,7 +44,7 @@ class ofxCalibrator {
 	ofFbo fbo,fbo_bg;
 	
 	screen_t *current_screen;
-	int width, height;
+	float width, height;
 	int divx, divy;
 	int screenrow,screencol;
 public:

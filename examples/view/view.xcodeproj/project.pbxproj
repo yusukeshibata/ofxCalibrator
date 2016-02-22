@@ -28,6 +28,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		74D97E901C77047500632D4F /* config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = config.json; path = ../bin/data/config.json; sourceTree = "<group>"; };
 		74F31BC21C71B14500D1195A /* ofxCalibrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxCalibrator.h; sourceTree = "<group>"; };
 		74F31BC41C71B14500D1195A /* ofxCalibrator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxCalibrator.cpp; sourceTree = "<group>"; };
 		74F31BF51C71B2B900D1195A /* json-forwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "json-forwards.h"; sourceTree = "<group>"; };
@@ -159,6 +160,7 @@
 			children = (
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
+				74D97E901C77047500632D4F /* config.json */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				BB4B014C10F69532006C3DED /* addons */,
 				74F31C0F1C71B7F300D1195A /* openFrameworksDebug.a */,

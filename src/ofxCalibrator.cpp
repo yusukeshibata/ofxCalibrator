@@ -240,39 +240,39 @@ void ofxCalibrator::load(string _filename) {
 		screensSplitted.push_back(sScreen);
 		for(int face_index=0;face_index<screen->faces.size();face_index++) {
 			face_t *face = screen->faces[face_index];
-			quad[0].set(face->lt->x,face->lt->y,0);
-			quad[1].set(face->rt->x,face->rt->y,0);
-			quad[2].set(face->rb->x,face->rb->y,0);
-			quad[3].set(face->lb->x,face->lb->y,0);
-			for(int y = 0; y < gridSizeY; y++){
-				for(int x = 0; x < gridSizeX; x++){
-					int index = y*gridSizeX + x;
-					
-					float pctx  = (float)x * xRes;
-					float pcty  = (float)y * yRes;
-
-					float linePt0x  = (1-pcty)*quad[0].x + pcty * quad[3].x;
-					float linePt0y  = (1-pcty)*quad[0].y + pcty * quad[3].y;
-					float linePt1x  = (1-pcty)*quad[1].x + pcty * quad[2].x;
-					float linePt1y  = (1-pcty)*quad[1].y + pcty * quad[2].y;
-					float ptx       = (1-pctx) * linePt0x + pctx * linePt1x;
-					float pty       = (1-pctx) * linePt0y + pctx * linePt1y;
-					grid[index].set(ptx, pty, 0);
+			if(reverse == FALSE) {
+				quad[0].set(face->lt->x,face->lt->y,0);
+				quad[1].set(face->rt->x,face->rt->y,0);
+				quad[2].set(face->rb->x,face->rb->y,0);
+				quad[3].set(face->lb->x,face->lb->y,0);
+				for(int y = 0; y < gridSizeY; y++){
+					for(int x = 0; x < gridSizeX; x++){
+						int index = y*gridSizeX + x;
+						
+						float pctx  = (float)x * xRes;
+						float pcty  = (float)y * yRes;
+						
+						float linePt0x  = (1-pcty)*quad[0].x + pcty * quad[3].x;
+						float linePt0y  = (1-pcty)*quad[0].y + pcty * quad[3].y;
+						float linePt1x  = (1-pcty)*quad[1].x + pcty * quad[2].x;
+						float linePt1y  = (1-pcty)*quad[1].y + pcty * quad[2].y;
+						float ptx       = (1-pctx) * linePt0x + pctx * linePt1x;
+						float pty       = (1-pctx) * linePt0y + pctx * linePt1y;
+						grid[index].set(ptx, pty, 0);
+					}
 				}
-			}
-			for(int y = 0; y < gridSizeY-1; y++){
-				for(int x = 0; x < gridSizeX-1; x++){
-					int pt0 = x + y*gridSizeX;
-					int pt1 = (x+1) + y*gridSizeX;
-					int pt2 = (x+1) + (y+1)*gridSizeX;
-					int pt3 = x + (y+1)*gridSizeX;
-
-					face_t *sFace = new face_t();
-					sFace->offsetx = face->offsetx+face->ow*x/(gridSizeX-1);
-					sFace->offsety = face->offsety+face->oh*y/(gridSizeY-1);
-					sFace->ow = face->ow/(gridSizeX-1);
-					sFace->oh = face->oh/(gridSizeY-1);
-					if(reverse == FALSE) {
+				for(int y = 0; y < gridSizeY-1; y++){
+					for(int x = 0; x < gridSizeX-1; x++){
+						int pt0 = x + y*gridSizeX;
+						int pt1 = (x+1) + y*gridSizeX;
+						int pt2 = (x+1) + (y+1)*gridSizeX;
+						int pt3 = x + (y+1)*gridSizeX;
+						
+						face_t *sFace = new face_t();
+						sFace->offsetx = face->offsetx+face->ow*x/(gridSizeX-1);
+						sFace->offsety = face->offsety+face->oh*y/(gridSizeY-1);
+						sFace->ow = face->ow/(gridSizeX-1);
+						sFace->oh = face->oh/(gridSizeY-1);
 						sFace->vertices[0].x = grid[pt0].x;
 						sFace->vertices[0].y = grid[pt0].y;
 						sFace->vertices[1].x = grid[pt1].x;
@@ -289,34 +289,48 @@ void ofxCalibrator::load(string _filename) {
 						sFace->texcoords[2].y = 1;
 						sFace->texcoords[3].x = 0;
 						sFace->texcoords[3].y = 1;
-					} else {
-						sFace->vertices[0].x =quad[0].x;
-						sFace->vertices[0].y =quad[0].y;
-						sFace->vertices[1].x =quad[1].x;
-						sFace->vertices[1].y =quad[1].y;
-						sFace->vertices[2].x =quad[2].x;
-						sFace->vertices[2].y =quad[2].y;
-						sFace->vertices[3].x =quad[3].x;
-						sFace->vertices[3].y =quad[3].y;
-						sFace->texcoords[0].x = (grid[pt0].x/(float)width*screencol-screen->col);
-						sFace->texcoords[0].y = (grid[pt0].y/(float)height*screenrow-screen->row);
-						sFace->texcoords[1].x = (grid[pt1].x/(float)width*screencol-screen->col);
-						sFace->texcoords[1].y = (grid[pt1].y/(float)height*screenrow-screen->row);
-						sFace->texcoords[2].x = (grid[pt2].x/(float)width*screencol-screen->col);
-						sFace->texcoords[2].y = (grid[pt2].y/(float)height*screenrow-screen->row);
-						sFace->texcoords[3].x = (grid[pt3].x/(float)width*screencol-screen->col);
-						sFace->texcoords[3].y = (grid[pt3].y/(float)height*screenrow-screen->row);
+						sFace->vbo.setVertexData(sFace->vertices,4, GL_STATIC_DRAW);
+						sFace->vbo.setTexCoordData(sFace->texcoords,4, GL_STATIC_DRAW);
+						sFace->row = y;
+						sFace->col = x;
+						char k[16];
+						sprintf(k,"%d_%d", sFace->row, sFace->col);
+						sScreen->facemap.insert(map<string,face_t *>::value_type(k,sFace));
+						sScreen->faces.push_back(sFace);
+						sFace->fbo.allocate(sFace->ow,sFace->oh);
 					}
-					sFace->vbo.setVertexData(sFace->vertices,4, GL_STATIC_DRAW);
-					sFace->vbo.setTexCoordData(sFace->texcoords,4, GL_STATIC_DRAW);
-					sFace->row = y;
-					sFace->col = x;
-					char k[16];
-					sprintf(k,"%d_%d", sFace->row, sFace->col);
-					sScreen->facemap.insert(map<string,face_t *>::value_type(k,sFace));
-					sScreen->faces.push_back(sFace);
-					sFace->fbo.allocate(sFace->ow,sFace->oh);
 				}
+			} else {
+				face_t *sFace = new face_t();
+				sFace->offsetx = face->offsetx;
+				sFace->offsety = face->offsety;
+				sFace->ow = face->ow;
+				sFace->oh = face->oh;
+				sFace->vertices[0].x = 0;
+				sFace->vertices[0].y = 0;
+				sFace->vertices[1].x = width;
+				sFace->vertices[1].y = 0;
+				sFace->vertices[2].x = width;
+				sFace->vertices[2].y = height;
+				sFace->vertices[3].x = 0;
+				sFace->vertices[3].y = height;
+				sFace->texcoords[0].x = face->lt->x/width;
+				sFace->texcoords[0].y = face->lt->y/height;
+				sFace->texcoords[1].x = face->rt->x/width;
+				sFace->texcoords[1].y = face->rt->y/height;
+				sFace->texcoords[2].x = face->rb->x/width;
+				sFace->texcoords[2].y = face->rb->y/height;
+				sFace->texcoords[3].x = face->lb->x/width;
+				sFace->texcoords[3].y = face->lb->y/height;
+				sFace->vbo.setVertexData(sFace->vertices,4, GL_STATIC_DRAW);
+				sFace->vbo.setTexCoordData(sFace->texcoords,4, GL_STATIC_DRAW);
+				sFace->row = face->row;
+				sFace->col = face->col;
+				char k[16];
+				sprintf(k,"%d_%d", sFace->row, sFace->col);
+				sScreen->facemap.insert(map<string,face_t *>::value_type(k,sFace));
+				sScreen->faces.push_back(sFace);
+				sFace->fbo.allocate(sFace->ow,sFace->oh);
 			}
 		}
 	}
