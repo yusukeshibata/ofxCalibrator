@@ -3,7 +3,7 @@
 	"height":900,
 	"screencol":2,
 	"screenrow":2,
-	"divx":2,
-	"divy":2,
-	"reverse":false
+	"divx":8,
+	"divy":8,
+	"reverse":true
 }

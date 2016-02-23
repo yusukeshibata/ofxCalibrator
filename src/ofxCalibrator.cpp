@@ -284,6 +284,57 @@ void ofxCalibrator::load(string _filename) {
 					}
 				}
 			} else {
+				quad[0].set(face->lt->x,face->lt->y,0);
+				quad[1].set(face->rt->x,face->rt->y,0);
+				quad[2].set(face->rb->x,face->rb->y,0);
+				quad[3].set(face->lb->x,face->lb->y,0);
+				for(int y = 0; y < gridSizeY; y++){
+					for(int x = 0; x < gridSizeX; x++){
+						int index = y*gridSizeX + x;
+						
+						float pctx  = (float)x * xRes;
+						float pcty  = (float)y * yRes;
+						
+						float linePt0x  = (1-pcty)*quad[0].x + pcty * quad[3].x;
+						float linePt0y  = (1-pcty)*quad[0].y + pcty * quad[3].y;
+						float linePt1x  = (1-pcty)*quad[1].x + pcty * quad[2].x;
+						float linePt1y  = (1-pcty)*quad[1].y + pcty * quad[2].y;
+						float ptx       = (1-pctx) * linePt0x + pctx * linePt1x;
+						float pty       = (1-pctx) * linePt0y + pctx * linePt1y;
+						grid[index].set(ptx, pty, 0);
+					}
+				}
+				for(int y = 0; y < gridSizeY-1; y++){
+					for(int x = 0; x < gridSizeX-1; x++){
+						int pt0 = x + y*gridSizeX;
+						int pt1 = (x+1) + y*gridSizeX;
+						int pt2 = (x+1) + (y+1)*gridSizeX;
+						int pt3 = x + (y+1)*gridSizeX;
+						//
+						draw_t draw;
+						draw.offsetx = face->offsetx;
+						draw.offsety = face->offsety;
+						draw.texcoords[0].x = grid[pt0].x/(float)width ;
+						draw.texcoords[0].y = grid[pt0].y/(float)height;
+						draw.texcoords[1].x = grid[pt1].x/(float)width ;
+						draw.texcoords[1].y = grid[pt1].y/(float)height;
+						draw.texcoords[2].x = grid[pt2].x/(float)width ;
+						draw.texcoords[2].y = grid[pt2].y/(float)height;
+						draw.texcoords[3].x = grid[pt3].x/(float)width ;
+						draw.texcoords[3].y = grid[pt3].y/(float)height;
+						draw.vertices[0].x = (face->col+0/(float)(gridSizeX-1)+(float)x/(float)(gridSizeX-1))*(float)width /(float)screencol/(float)screen->cols+((float)width /(float)screencol)*(float)screen->col;
+						draw.vertices[0].y = (face->row+0/(float)(gridSizeY-1)+(float)y/(float)(gridSizeY-1))*(float)height/(float)screenrow/(float)screen->rows+((float)height/(float)screenrow)*(float)screen->row;
+						draw.vertices[1].x = (face->col+1/(float)(gridSizeX-1)+(float)x/(float)(gridSizeX-1))*(float)width /(float)screencol/(float)screen->cols+((float)width /(float)screencol)*(float)screen->col;
+						draw.vertices[1].y = (face->row+0/(float)(gridSizeY-1)+(float)y/(float)(gridSizeY-1))*(float)height/(float)screenrow/(float)screen->rows+((float)height/(float)screenrow)*(float)screen->row;
+						draw.vertices[2].x = (face->col+1/(float)(gridSizeX-1)+(float)x/(float)(gridSizeX-1))*(float)width /(float)screencol/(float)screen->cols+((float)width /(float)screencol)*(float)screen->col;
+						draw.vertices[2].y = (face->row+1/(float)(gridSizeY-1)+(float)y/(float)(gridSizeY-1))*(float)height/(float)screenrow/(float)screen->rows+((float)height/(float)screenrow)*(float)screen->row;
+						draw.vertices[3].x = (face->col+0/(float)(gridSizeX-1)+(float)x/(float)(gridSizeX-1))*(float)width /(float)screencol/(float)screen->cols+((float)width /(float)screencol)*(float)screen->col;
+						draw.vertices[3].y = (face->row+1/(float)(gridSizeY-1)+(float)y/(float)(gridSizeY-1))*(float)height/(float)screenrow/(float)screen->rows+((float)height/(float)screenrow)*(float)screen->row;
+						draw.vbo.setVertexData(draw.vertices,4, GL_STATIC_DRAW);
+						draw.vbo.setTexCoordData(draw.texcoords,4, GL_STATIC_DRAW);
+						draws.push_back(draw);
+					}
+				}
 			}
 		}
 	}
