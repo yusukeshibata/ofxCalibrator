@@ -1,9 +1,11 @@
 {
-	"width":1440,
-	"height":900,
-	"screencol":2,
-	"screenrow":2,
-	"divx":8,
-	"divy":8,
-	"reverse":true
+	"color":"0x00ff00",
+	"width":3840,
+	"height":1080,
+	"screencol":4,
+	"screenrow":1,
+	"divx":2,
+	"divy":2,
+	"reverse":true,
+	"image":"guide.jpg"
 }

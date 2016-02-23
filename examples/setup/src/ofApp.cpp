@@ -1,9 +1,16 @@
 #include "ofApp.h"
+#include "ofxJSONElement.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
 	//ofSetFullscreen(TRUE);
 	calib.load("config");
+	ofxJSONElement json;
+	if(json.open("setup.json")) {
+		if(json["guide"].empty() == FALSE) {
+			guideImage.load(json["guide"].asString());
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -23,12 +30,15 @@ void ofApp::draw(){
 	float per = min((float)ww/(float)fw,(float)wh/(float)fh);
 	int w = fw*per;
 	int h = fh*per;
+	if(guideImage.isAllocated()) {
+		guideImage.draw((ww-w)/2,(wh-h)/2,w,h);
+	}
 	fbo->draw((ww-w)/2,(wh-h)/2,w,h);
-	//if(mousepos.length() > 0) {
-	//    ofSetHexColor(0x00fff00);
-	//    ofDrawLine(mousepos.x-10,mousepos.y,mousepos.x+10,mousepos.y);
-	//    ofDrawLine(mousepos.x,mousepos.y-10,mousepos.x,mousepos.y+10);
-	//}
+	// if(mousepos.length() > 0) {
+	//     ofSetHexColor(0x00fff00);
+	//     ofDrawLine(mousepos.x-10,mousepos.y,mousepos.x+10,mousepos.y);
+	//     ofDrawLine(mousepos.x,mousepos.y-10,mousepos.x,mousepos.y+10);
+	// }
 }
 
 //--------------------------------------------------------------

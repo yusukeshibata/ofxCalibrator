@@ -68,7 +68,7 @@ ofFbo *ofxCalibrator::getFbo() {
 void ofxCalibrator::update() {
 	int i,j;
 	fbo.begin();
-	ofBackgroundHex(0x000000);
+	ofBackground(ofColor(0,0,0,0));
 	ofSetColor(0xff,0,0);
 	ofNoFill();
 	ofSetLineWidth(4);

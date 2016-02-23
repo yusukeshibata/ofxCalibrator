@@ -12,7 +12,7 @@ void ofApp::setup(){
 	height = setting["height"].asInt();
 
 	ofImage image;
-	image.load("test.jpg");
+	image.load(setting["image"].asString());
 	fbo.allocate(width,height);
 	fbo.begin();
 	ofClear(0x000000);
@@ -26,17 +26,17 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofClear(0x000000);
-	ofSetHexColor(0xffffff);
-	float ww = ofGetWidth();
-	float wh = ofGetHeight();
-	float cw = calib.getWidth();
-	float ch = calib.getHeight();
-	float pw = ww/cw;
-	float ph = wh/ch;
-	float p = min(pw,ph);
+	ofBackgroundHex(0xffffff);
+	int fw = calib.getWidth();
+	int fh = calib.getHeight();
+	int ww = ofGetWidth();
+	int wh = ofGetHeight();
+	float per = min((float)ww/(float)fw,(float)wh/(float)fh);
+	int w = fw*per;
+	int h = fh*per;
 	ofPushMatrix();
-	ofScale(p,p);
+	ofTranslate((ww-w)/2,(wh-h)/2);
+	ofScale(per,per);
 	calib.draw(&fbo);
 	ofPopMatrix();
 }

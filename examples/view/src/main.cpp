@@ -6,6 +6,6 @@
 int main( ){
 	ofAppGLFWWindow win;
 	win.setMultiDisplayFullscreen(TRUE);
-	ofSetupOpenGL(&win, 640,480, OF_WINDOW);
+	ofSetupOpenGL(&win, 800,600, OF_WINDOW);
 	ofRunApp( new ofApp());
 }
