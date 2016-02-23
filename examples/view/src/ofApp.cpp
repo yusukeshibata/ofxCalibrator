@@ -5,7 +5,7 @@
 void ofApp::setup(){
 	ofxJSONElement setting;
 	setting.open("config.json");
-	ofSetFullscreen(TRUE);
+	//ofSetFullscreen(TRUE);
 	ofDisableArbTex();
 	calib.load("config");
 	width = setting["width"].asInt();
@@ -16,14 +16,6 @@ void ofApp::setup(){
 	fbo.allocate(width,height);
 	fbo.begin();
 	ofClear(0x000000);
-	//ofSetLineWidth(2);
-	//ofSetHexColor(0xff0000);
-	//for(float y=0;y<height;y+=20) {
-	//	ofDrawLine(0,y,width,y);
-	//	for(float x=0;x<width;x+=20) {
-	//		ofDrawLine(x,0,x,height);
-	//	}
-	//}
 	image.draw(0,0,width,height);
 	fbo.end();
 }
@@ -36,11 +28,24 @@ void ofApp::update(){
 void ofApp::draw(){
 	ofClear(0x000000);
 	ofSetHexColor(0xffffff);
+	float ww = ofGetWidth();
+	float wh = ofGetHeight();
+	float cw = calib.getWidth();
+	float ch = calib.getHeight();
+	float pw = ww/cw;
+	float ph = wh/ch;
+	float p = min(pw,ph);
+	ofPushMatrix();
+	ofScale(p,p);
 	calib.draw(&fbo);
+	ofPopMatrix();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+	if(key=='f') {
+		ofToggleFullscreen();
+	}
 }
 
 //--------------------------------------------------------------

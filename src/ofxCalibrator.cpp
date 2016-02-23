@@ -3,28 +3,23 @@
 
 #define PLOTSIZE 40
 
+float ofxCalibrator::getWidth() {
+	return width;
+}
+float ofxCalibrator::getHeight() {
+	return height;
+}
 void ofxCalibrator::draw(ofFbo *fbo,ofFbo *fbo_to_draw) {
-	int i,j;
 	if(fbo_to_draw) {
 		fbo_to_draw->begin();
 	}
-	for(i=0;i<screensSplitted.size();i++) {
-		screen_t *screen = screensSplitted[i];
-		for(j=0;j<screen->faces.size();j++) {
-			face_t *face = screen->faces[j];
-			face->fbo.begin();
-			ofPushStyle();
-			ofSetHexColor(0x000000);
-			ofDrawRectangle(0,0,face->fbo.getWidth(),face->fbo.getHeight());
-			ofPopStyle();
-			fbo->draw(-face->offsetx,-face->offsety);
-			face->fbo.end();
-
-			face->fbo.getTexture().bind();
-			face->vbo.draw(GL_QUADS,0,4);
-			face->fbo.getTexture().unbind();
-		}
+	fbo->getTexture().bind();
+	vector<draw_t>::iterator it;
+	for(it=draws.begin();it!=draws.end();it++) {
+		ofVbo &vbo = it->vbo;
+		vbo.draw(GL_QUADS,0,4);
 	}
+	fbo->getTexture().unbind();
 	if(fbo_to_draw) {
 		fbo_to_draw->end();
 	}
@@ -157,6 +152,7 @@ void ofxCalibrator::load(string _filename) {
 	ofxJSONElement settings;
 	char filename_calibration[1024];
 	sprintf(filename_calibration,"%s.calibration.json",filename.c_str());
+	int facenum_all = 0;
 	if(settings.open(filename_calibration)) {
 		for(i=0;i<screens.size();i++) {
 			current_screen = screens[i];
@@ -175,6 +171,7 @@ void ofxCalibrator::load(string _filename) {
 				float y = settings[key].asFloat();
 				newpoint(x,y);
 			}
+			facenum_all += facenum;
 			for(j=0;j<facenum;j++) {
 				face_t *face = new face_t();
 				
@@ -222,22 +219,16 @@ void ofxCalibrator::load(string _filename) {
 	fbo.allocate(width, height);
 
 	// split
-	ofPoint * grid = new ofPoint[divx * divy];
+	vector<ofPoint> grid(divx * divy);
 	ofPoint quad[4];
 	ofPoint utQuad[4];
 	int gridSizeX = divx;
 	int gridSizeY = divy;
 	float xRes = 1.0/(gridSizeX-1);
 	float yRes = 1.0/(gridSizeY-1);
+
 	for(int screen_index=0;screen_index<screens.size();screen_index++) {
 		screen_t *screen = screens[screen_index];
-		screen_t *sScreen = new screen_t();
-		sScreen->index = screen->index;
-		sScreen->row = screen->row;
-		sScreen->col = screen->col;
-		sScreen->rows = screen->rows*(gridSizeY-1);
-		sScreen->cols = screen->cols*(gridSizeX-1);
-		screensSplitted.push_back(sScreen);
 		for(int face_index=0;face_index<screen->faces.size();face_index++) {
 			face_t *face = screen->faces[face_index];
 			if(reverse == FALSE) {
@@ -267,70 +258,32 @@ void ofxCalibrator::load(string _filename) {
 						int pt1 = (x+1) + y*gridSizeX;
 						int pt2 = (x+1) + (y+1)*gridSizeX;
 						int pt3 = x + (y+1)*gridSizeX;
-						
-						face_t *sFace = new face_t();
-						sFace->offsetx = face->offsetx+face->ow*x/(gridSizeX-1);
-						sFace->offsety = face->offsety+face->oh*y/(gridSizeY-1);
-						sFace->ow = face->ow/(gridSizeX-1);
-						sFace->oh = face->oh/(gridSizeY-1);
-						sFace->vertices[0].x = grid[pt0].x;
-						sFace->vertices[0].y = grid[pt0].y;
-						sFace->vertices[1].x = grid[pt1].x;
-						sFace->vertices[1].y = grid[pt1].y;
-						sFace->vertices[2].x = grid[pt2].x;
-						sFace->vertices[2].y = grid[pt2].y;
-						sFace->vertices[3].x = grid[pt3].x;
-						sFace->vertices[3].y = grid[pt3].y;
-						sFace->texcoords[0].x = 0;
-						sFace->texcoords[0].y = 0;
-						sFace->texcoords[1].x = 1;
-						sFace->texcoords[1].y = 0;
-						sFace->texcoords[2].x = 1;
-						sFace->texcoords[2].y = 1;
-						sFace->texcoords[3].x = 0;
-						sFace->texcoords[3].y = 1;
-						sFace->vbo.setVertexData(sFace->vertices,4, GL_STATIC_DRAW);
-						sFace->vbo.setTexCoordData(sFace->texcoords,4, GL_STATIC_DRAW);
-						sFace->row = y;
-						sFace->col = x;
-						char k[16];
-						sprintf(k,"%d_%d", sFace->row, sFace->col);
-						sScreen->facemap.insert(map<string,face_t *>::value_type(k,sFace));
-						sScreen->faces.push_back(sFace);
-						sFace->fbo.allocate(sFace->ow,sFace->oh);
+						//
+						draw_t draw;
+						draw.offsetx = face->offsetx;
+						draw.offsety = face->offsety;
+						draw.vertices[0].x = grid[pt0].x;
+						draw.vertices[0].y = grid[pt0].y;
+						draw.vertices[1].x = grid[pt1].x;
+						draw.vertices[1].y = grid[pt1].y;
+						draw.vertices[2].x = grid[pt2].x;
+						draw.vertices[2].y = grid[pt2].y;
+						draw.vertices[3].x = grid[pt3].x;
+						draw.vertices[3].y = grid[pt3].y;
+						draw.texcoords[0].x = (x+0)/(float)(gridSizeX-1)/(float)screencol/(float)screen->cols+(float)face->col/(float)screen->cols/(float)screencol+(float)screen->col/(float)screencol;
+						draw.texcoords[0].y = (y+0)/(float)(gridSizeY-1)/(float)screenrow/(float)screen->rows+(float)face->row/(float)screen->rows/(float)screenrow+(float)screen->row/(float)screenrow;
+						draw.texcoords[1].x = (x+1)/(float)(gridSizeX-1)/(float)screencol/(float)screen->cols+(float)face->col/(float)screen->cols/(float)screencol+(float)screen->col/(float)screencol;
+						draw.texcoords[1].y = (y+0)/(float)(gridSizeY-1)/(float)screenrow/(float)screen->rows+(float)face->row/(float)screen->rows/(float)screenrow+(float)screen->row/(float)screenrow;
+						draw.texcoords[2].x = (x+1)/(float)(gridSizeX-1)/(float)screencol/(float)screen->cols+(float)face->col/(float)screen->cols/(float)screencol+(float)screen->col/(float)screencol;
+						draw.texcoords[2].y = (y+1)/(float)(gridSizeY-1)/(float)screenrow/(float)screen->rows+(float)face->row/(float)screen->rows/(float)screenrow+(float)screen->row/(float)screenrow;
+						draw.texcoords[3].x = (x+0)/(float)(gridSizeX-1)/(float)screencol/(float)screen->cols+(float)face->col/(float)screen->cols/(float)screencol+(float)screen->col/(float)screencol;
+						draw.texcoords[3].y = (y+1)/(float)(gridSizeY-1)/(float)screenrow/(float)screen->rows+(float)face->row/(float)screen->rows/(float)screenrow+(float)screen->row/(float)screenrow;
+						draw.vbo.setVertexData(draw.vertices,4, GL_STATIC_DRAW);
+						draw.vbo.setTexCoordData(draw.texcoords,4, GL_STATIC_DRAW);
+						draws.push_back(draw);
 					}
 				}
 			} else {
-				face_t *sFace = new face_t();
-				sFace->offsetx = face->offsetx;
-				sFace->offsety = face->offsety;
-				sFace->ow = face->ow;
-				sFace->oh = face->oh;
-				sFace->vertices[0].x = 0;
-				sFace->vertices[0].y = 0;
-				sFace->vertices[1].x = width;
-				sFace->vertices[1].y = 0;
-				sFace->vertices[2].x = width;
-				sFace->vertices[2].y = height;
-				sFace->vertices[3].x = 0;
-				sFace->vertices[3].y = height;
-				sFace->texcoords[0].x = face->lt->x/width;
-				sFace->texcoords[0].y = face->lt->y/height;
-				sFace->texcoords[1].x = face->rt->x/width;
-				sFace->texcoords[1].y = face->rt->y/height;
-				sFace->texcoords[2].x = face->rb->x/width;
-				sFace->texcoords[2].y = face->rb->y/height;
-				sFace->texcoords[3].x = face->lb->x/width;
-				sFace->texcoords[3].y = face->lb->y/height;
-				sFace->vbo.setVertexData(sFace->vertices,4, GL_STATIC_DRAW);
-				sFace->vbo.setTexCoordData(sFace->texcoords,4, GL_STATIC_DRAW);
-				sFace->row = face->row;
-				sFace->col = face->col;
-				char k[16];
-				sprintf(k,"%d_%d", sFace->row, sFace->col);
-				sScreen->facemap.insert(map<string,face_t *>::value_type(k,sFace));
-				sScreen->faces.push_back(sFace);
-				sFace->fbo.allocate(sFace->ow,sFace->oh);
 			}
 		}
 	}
