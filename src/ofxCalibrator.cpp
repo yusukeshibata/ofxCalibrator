@@ -395,7 +395,7 @@ void ofxCalibrator::save() {
 	}
 	char filename_calibration[1024];
 	sprintf(filename_calibration,"%s.calibration.json",filename.c_str());
-	settings.save(filename_calibration);
+	settings.save(filename_calibration,TRUE);
 }
 point_t *ofxCalibrator::newpoint(int x, int y) {
 	point_t *p = new point_t;
