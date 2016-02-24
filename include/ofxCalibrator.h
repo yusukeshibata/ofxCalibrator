@@ -52,6 +52,7 @@ class ofxCalibrator {
 	int divx, divy;
 	int screenrow,screencol;
 	vector<draw_t> draws;
+	void split();
 public:
 	float getWidth();
 	float getHeight();

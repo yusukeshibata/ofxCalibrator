@@ -218,6 +218,10 @@ void ofxCalibrator::load(string _filename) {
 	current_screen = screens[0];
 	fbo.allocate(width, height);
 
+	split();
+}
+void ofxCalibrator::split() {
+	draws.clear();
 	// split
 	vector<ofPoint> grid(divx * divy);
 	ofPoint quad[4];
@@ -396,6 +400,8 @@ void ofxCalibrator::save() {
 	char filename_calibration[1024];
 	sprintf(filename_calibration,"%s.calibration.json",filename.c_str());
 	settings.save(filename_calibration,TRUE);
+	//
+	split();
 }
 point_t *ofxCalibrator::newpoint(int x, int y) {
 	point_t *p = new point_t;
