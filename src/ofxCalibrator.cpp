@@ -1,7 +1,7 @@
 #include "ofxCalibrator.h"
 #include "ofxJSONElement.h"
 
-#define PLOTSIZE 40
+#define PLOTSIZE 80
 
 float ofxCalibrator::getWidth() {
 	return width;
@@ -46,6 +46,8 @@ void ofxCalibrator::mousePressed(int x, int y) {
 			return;
 		}
 	}
+	//
+	split();
 }
 void ofxCalibrator::mouseDragged(int x, int y) {
 	
@@ -71,7 +73,7 @@ void ofxCalibrator::update() {
 	ofBackground(ofColor(0,0,0,0));
 	ofSetColor(0xff,0,0);
 	ofNoFill();
-	ofSetLineWidth(4);
+	ofSetLineWidth(12);
 	for(i=0;i<screens.size();i++) {
 		screen_t *screen = screens[i];
 		int size = screen->faces.size();
@@ -92,6 +94,8 @@ void ofxCalibrator::update() {
 		}
 	}
 	fbo.end();
+	//
+	split();
 }
 void ofxCalibrator::setCurrentScreen(int index) {
 	if(index < screens.size())
@@ -400,8 +404,6 @@ void ofxCalibrator::save() {
 	char filename_calibration[1024];
 	sprintf(filename_calibration,"%s.calibration.json",filename.c_str());
 	settings.save(filename_calibration,TRUE);
-	//
-	split();
 }
 point_t *ofxCalibrator::newpoint(int x, int y) {
 	point_t *p = new point_t;
@@ -626,4 +628,6 @@ void ofxCalibrator::rebuild_faces() {
 			f->offsety = (float)current_screen->row*py + py/(float)current_screen->rows*(float)j;
 		}
 	}
+	//
+	split();
 }
