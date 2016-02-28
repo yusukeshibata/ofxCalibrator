@@ -6,14 +6,6 @@
 #include <vector>
 #include <map>
 
-typedef struct _draw_t {
-	ofVbo vbo;
-	ofVec3f vertices[4];
-	ofVec2f texcoords[4];
-	float offsetx;
-	float offsety;
-} draw_t;
-
 typedef struct _point_t {
 	int index;
 	float x;
@@ -36,6 +28,15 @@ typedef struct _screen_t {
 	vector <face_t *> faces;
 } screen_t;
 
+typedef struct _draw_t {
+	ofVbo vbo;
+	ofVec3f vertices[4];
+	ofVec2f texcoords[4];
+	float offsetx;
+	float offsety;
+	screen_t *screen;
+} draw_t;
+
 class ofxCalibrator {
 	
 	point_t *p_dragging;
@@ -46,6 +47,7 @@ class ofxCalibrator {
 	void rebuild_faces();
 	void prepare();
 	ofFbo fbo,fbo_bg;
+	bool focus_currentscreen;
 	
 	screen_t *current_screen;
 	float width, height;
@@ -54,6 +56,7 @@ class ofxCalibrator {
 	vector<draw_t> draws;
 	void split();
 public:
+	void setFocusCurrentScreen(bool focus);
 	float getWidth();
 	float getHeight();
 	void load(string filename);

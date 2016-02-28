@@ -9,6 +9,9 @@ float ofxCalibrator::getWidth() {
 float ofxCalibrator::getHeight() {
 	return height;
 }
+void ofxCalibrator::setFocusCurrentScreen(bool focus) {
+	focus_currentscreen = focus;
+}
 void ofxCalibrator::draw(ofFbo *fbo,ofFbo *fbo_to_draw) {
 	if(fbo_to_draw) {
 		fbo_to_draw->begin();
@@ -16,6 +19,7 @@ void ofxCalibrator::draw(ofFbo *fbo,ofFbo *fbo_to_draw) {
 	fbo->getTexture().bind();
 	vector<draw_t>::iterator it;
 	for(it=draws.begin();it!=draws.end();it++) {
+		if(focus_currentscreen && it->screen != current_screen) continue;
 		ofVbo &vbo = it->vbo;
 		vbo.draw(GL_QUADS,0,4);
 	}
@@ -100,6 +104,7 @@ void ofxCalibrator::update() {
 	ofSetLineWidth(12);
 	for(i=0;i<screens.size();i++) {
 		screen_t *screen = screens[i];
+		if(focus_currentscreen && screen != current_screen) continue;
 		int size = screen->faces.size();
 		if(size == 0) continue;
 		for(j=0; j<size; j++) {
@@ -145,6 +150,7 @@ ofxCalibrator::ofxCalibrator() {
 	reverse = FALSE;
 }
 void ofxCalibrator::load(string _filename) {
+	focus_currentscreen = FALSE;
 	filename = _filename;
 	char filename_config[1024];
 	sprintf(filename_config,"%s.json",filename.c_str());
@@ -292,6 +298,7 @@ void ofxCalibrator::split() {
 						int pt3 = x + (y+1)*gridSizeX;
 						//
 						draw_t draw;
+						draw.screen = screen;
 						draw.offsetx = face->offsetx;
 						draw.offsety = face->offsety;
 						draw.vertices[0].x = grid[pt0].x;
@@ -344,6 +351,7 @@ void ofxCalibrator::split() {
 						int pt3 = x + (y+1)*gridSizeX;
 						//
 						draw_t draw;
+						draw.screen = screen;
 						draw.offsetx = face->offsetx;
 						draw.offsety = face->offsety;
 						draw.texcoords[0].x = grid[pt0].x;
