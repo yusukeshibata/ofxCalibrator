@@ -49,7 +49,7 @@ void ofxCalibrator::mousePressed(int x, int y) {
 	//
 	split();
 }
-void ofxCalibrator::mouseDragged(int x, int y) {
+void ofxCalibrator::mouseDragged(int x, int y,bool snap) {
 	
 	if(p_dragging == NULL) return;
 	int fw = fbo.getWidth();
@@ -61,8 +61,32 @@ void ofxCalibrator::mouseDragged(int x, int y) {
 	int h = fh*per;
 	float mx = (x-(ww-w)/2)/per;
 	float my = (y-(wh-h)/2)/per;
-	p_dragging->x = mx;
-	p_dragging->y = my;
+
+	// check nearest
+	point_t *p_nearest = NULL;
+	if(snap) {
+		for(int s=0;s<screens.size();s++) {
+			screen_t *screen = screens[s];
+			for(int i=0;i<screen->points.size();i++) {
+				point_t *p = screen->points[i];
+				if(p == p_dragging) continue;
+				float d = sqrt((mx-p->x)*(mx-p->x)+(my-p->y)*(my-p->y));
+				if(d < PLOTSIZE) {
+					p_nearest = p;
+					break;
+				}
+			}
+			if(p_nearest) break;
+		}
+	}
+	//
+	if(p_nearest) {
+		p_dragging->x = p_nearest->x;
+		p_dragging->y = p_nearest->y;
+	} else {
+		p_dragging->x = mx;
+		p_dragging->y = my;
+	}
 }
 ofFbo *ofxCalibrator::getFbo() {
 	return &fbo;

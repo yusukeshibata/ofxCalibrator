@@ -68,7 +68,7 @@ public:
 	void update();
 	ofFbo *getFbo();
 	void mousePressed(int x, int y);
-	void mouseDragged(int x, int y);
+	void mouseDragged(int x, int y,bool snap=FALSE);
 protected:
 	bool reverse;
 	string filename;
