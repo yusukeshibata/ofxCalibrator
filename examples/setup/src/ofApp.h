@@ -22,4 +22,5 @@ public:
 	ofxCalibrator calib;
 	ofPoint mousepos;
 	ofImage guideImage;
+	bool focus_currentscreen,snap;
 };

@@ -3,6 +3,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	snap = FALSE;
+	focus_currentscreen = FALSE;
 	//ofSetFullscreen(TRUE);
 	calib.load("config");
 	ofxJSONElement json;
@@ -46,6 +48,12 @@ void ofApp::keyPressed(int key){
 	int index;
 	if(key == 'f') {
 		ofToggleFullscreen();
+	} else if(key == OF_KEY_SHIFT) {
+		snap = TRUE;
+		calib.mouseDragged(mousepos.x,mousepos.y,snap);
+	} else if(key == ' ') {
+		focus_currentscreen = !focus_currentscreen;
+		calib.setFocusCurrentScreen(focus_currentscreen);
 	} else if(49 <= key  && key <= 57) {
 		index = key - 49;
 		calib.setCurrentScreen(index);
@@ -65,6 +73,10 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+	if(key == OF_KEY_SHIFT) {
+		snap = FALSE;
+		calib.mouseDragged(mousepos.x,mousepos.y,snap);
+	}
 }
 
 //--------------------------------------------------------------
@@ -75,11 +87,15 @@ void ofApp::mouseMoved(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-	calib.mouseDragged(x,y);
+	mousepos.x = x;
+	mousepos.y = y;
+	calib.mouseDragged(x,y,snap);
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+	mousepos.x = x;
+	mousepos.y = y;
 	calib.mousePressed(x,y);
 }
 
