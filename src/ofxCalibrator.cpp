@@ -612,14 +612,16 @@ void ofxCalibrator::rebuild_faces() {
 		for(j=0;j<rows; j++) {
 			sprintf(key,"%d_%d",j,i);
 			face_t *f = current_screen->facemap[key];
-			f->ox = f->lt->x = x+(float)i*fwidth;
-			f->lb->x = x+(float)i*fwidth;
-			f->rt->x = x+(float)(i+1)*fwidth;
-			f->rb->x = x+(float)(i+1)*fwidth;
-			f->oy = f->lt->y = y+(float)j*fheight;
-			f->lb->y = y+(float)(j+1)*fheight;
-			f->rt->y = y+(float)j*fheight;
-			f->rb->y = y+(float)(j+1)*fheight;
+			f->ox = x+(float)i*fwidth;
+			f->lt->x = x+(float)i*fwidth+50.0f;
+			f->lb->x = x+(float)i*fwidth+50.0f;
+			f->rt->x = x+(float)(i+1)*fwidth-50.0f;
+			f->rb->x = x+(float)(i+1)*fwidth-50.0f;
+			f->oy = y+(float)j*fheight;
+			f->lt->y = y+(float)j*fheight+50.0f;
+			f->lb->y = y+(float)(j+1)*fheight-50.0f;
+			f->rt->y = y+(float)j*fheight+50.0f;
+			f->rb->y = y+(float)(j+1)*fheight-50.0f;
 			f->ow = fwidth;
 			f->oh = fheight;
 			float px = (float)width/(float)screencol;
