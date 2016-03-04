@@ -10,7 +10,15 @@ void ofApp::setup(){
 	ofxJSONElement json;
 	if(json.open("setup.json")) {
 		if(json["guide"].empty() == FALSE) {
+			ofImage guideImage;
 			guideImage.load(json["guide"].asString());
+			int width = json["width"].asInt();
+			int height = json["height"].asInt();;
+			guideFbo.allocate(width,height);
+			guideFbo.begin();
+			guideImage.draw(0,0,width,height);
+			guideFbo.end();
+
 		}
 	}
 }
@@ -32,10 +40,14 @@ void ofApp::draw(){
 	float per = min((float)ww/(float)fw,(float)wh/(float)fh);
 	int w = fw*per;
 	int h = fh*per;
-	if(guideImage.isAllocated()) {
-		guideImage.draw((ww-w)/2,(wh-h)/2,w,h);
+	ofPushMatrix();
+	ofTranslate((ww-w)/2,(wh-h)/2);
+	ofScale(per,per);
+	if(guideFbo.isAllocated()) {
+		calib.draw(&guideFbo);
 	}
-	fbo->draw((ww-w)/2,(wh-h)/2,w,h);
+	fbo->draw(0,0,fw,fh);
+	ofPopMatrix();
 	// if(mousepos.length() > 0) {
 	//     ofSetHexColor(0x00fff00);
 	//     ofDrawLine(mousepos.x-10,mousepos.y,mousepos.x+10,mousepos.y);
@@ -75,7 +87,6 @@ void ofApp::keyPressed(int key){
 void ofApp::keyReleased(int key){
 	if(key == OF_KEY_SHIFT) {
 		snap = FALSE;
-		calib.mouseDragged(mousepos.x,mousepos.y,snap);
 	}
 }
 

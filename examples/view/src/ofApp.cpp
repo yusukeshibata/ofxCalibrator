@@ -4,15 +4,14 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofxJSONElement setting;
-	setting.open("config.json");
+	setting.open("setup.json");
 	//ofSetFullscreen(TRUE);
-	ofDisableArbTex();
 	calib.load("config");
 	width = setting["width"].asInt();
 	height = setting["height"].asInt();
 
 	ofImage image;
-	image.load(setting["image"].asString());
+	image.load(setting["guide"].asString());
 	fbo.allocate(width,height);
 	fbo.begin();
 	ofClear(0x000000);
